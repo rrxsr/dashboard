@@ -1,40 +1,46 @@
 {
-  "updated": "2026-04-25T08:53:34Z",
+  "updated": "2026-04-25T10:17:09Z",
   "bookings": [
     {
       "start": "2026-04-24",
       "end": "2026-04-26",
-      "guest": "CLOSED - Not available",
+      "guest": "Broneeritud",
+      "platform": "booking"
+    },
+    {
+      "start": "2026-05-14",
+      "end": "2026-05-17",
+      "guest": "Broneeritud",
       "platform": "booking"
     },
     {
       "start": "2026-06-06",
       "end": "2026-06-10",
-      "guest": "CLOSED - Not available",
+      "guest": "Broneeritud",
       "platform": "booking"
     },
     {
       "start": "2026-07-18",
       "end": "2026-07-25",
-      "guest": "CLOSED - Not available",
+      "guest": "Broneeritud",
       "platform": "booking"
     },
     {
       "start": "2026-08-12",
       "end": "2026-08-16",
-      "guest": "CLOSED - Not available",
+      "guest": "Broneeritud",
       "platform": "booking"
     },
     {
       "start": "2026-09-01",
       "end": "2026-09-05",
-      "guest": "CLOSED - Not available",
+      "guest": "Broneeritud",
       "platform": "booking"
     },
     {
       "start": "2026-09-06",
       "end": "2027-10-25",
-      "guest": "CLOSED - Not available",
+      "guest": "Broneeritud",
       "platform": "booking"
     }
   ]
