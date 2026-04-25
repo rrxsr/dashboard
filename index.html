@@ -3,366 +3,673 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>StayPulse Dashboard</title>
+<title>StayPulse — Raua Modern Sauna Suite</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0d1117;font-family:system-ui,-apple-system,sans-serif;color:#c9d1d9;min-height:100vh;padding:20px}
-.wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+body{background:#0d1117;font-family:system-ui,-apple-system,sans-serif;color:#c9d1d9;min-height:100vh}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
 
-/* Header */
-.header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.logo{font-size:17px;font-weight:600;color:#e6edf3}.logo span{color:#3b82f6}
-.sync-info{display:flex;align-items:center;gap:7px;font-size:11px;color:#6e7681}
-.sdot{width:7px;height:7px;border-radius:50%;background:#3fb950;flex-shrink:0}
+/* Sidebar */
+.sidebar{background:#161b22;border-right:1px solid #21262d;padding:20px 16px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{font-size:16px;font-weight:700;color:#e6edf3;margin-bottom:4px}.logo span{color:#3b82f6}
+.prop{font-size:11px;color:#6e7681;margin-bottom:20px}
+.nav-section{font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 6px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;font-size:13px;color:#8b949e;cursor:pointer;transition:all .12s;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:#21262d;color:#e6edf3}
+.nav-item.active{background:#1d2d3e;color:#58a6ff}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.sync-box{margin-top:auto;padding:10px;background:#0d1117;border-radius:8px;border:1px solid #21262d}
+.sdot{width:7px;height:7px;border-radius:50%;background:#3fb950;display:inline-block;margin-right:5px}
+.sync-txt{font-size:10px;color:#6e7681}
+
+/* Main */
+.main{padding:24px 28px;display:flex;flex-direction:column;gap:18px;overflow-x:hidden}
+.page{display:none}.page.active{display:flex;flex-direction:column;gap:18px}
+.page-title{font-size:18px;font-weight:600;color:#e6edf3}
 
 /* Metrics */
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.mc{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:13px 15px}
-.mlbl{font-size:11px;color:#6e7681;margin-bottom:5px}
-.mval{font-size:22px;font-weight:600;color:#e6edf3}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.mc{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:14px 16px}
+.mlbl{font-size:11px;color:#6e7681;margin-bottom:6px}
+.mval{font-size:24px;font-weight:600;color:#e6edf3}
 .msub{font-size:11px;margin-top:3px;color:#6e7681}
-.green{color:#3fb950}.yellow{color:#e3b341}.red{color:#f78166}
+.green{color:#3fb950}.yellow{color:#e3b341}.red{color:#f78166}.blue{color:#58a6ff}
 
-/* Layout */
-.grid2{display:grid;grid-template-columns:1fr 280px;gap:14px}
-.card{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:14px}
-.ctitle{font-size:11px;color:#6e7681;text-transform:uppercase;letter-spacing:.06em;font-weight:500;margin-bottom:12px}
+/* Cards */
+.card{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:16px}
+.ctitle{font-size:11px;color:#6e7681;text-transform:uppercase;letter-spacing:.06em;font-weight:500;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 
 /* Kalender */
-.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.cal-btn{background:#21262d;border:1px solid #30363d;border-radius:6px;padding:4px 12px;font-size:13px;color:#8b949e;cursor:pointer;transition:border-color .1s}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.cal-btn{background:#21262d;border:1px solid #30363d;border-radius:6px;padding:4px 14px;font-size:13px;color:#8b949e;cursor:pointer}
 .cal-btn:hover{border-color:#3b82f6;color:#58a6ff}
-.cal-month{font-size:14px;font-weight:500;color:#e6edf3}
-.cal-legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
-.lsp{font-size:10px;color:#6e7681;display:flex;align-items:center;gap:4px}
-.ldot{width:8px;height:8px;border-radius:2px;display:inline-block}
-.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cdlbl{font-size:10px;color:#484f58;text-align:center;padding:2px 0 6px}
-.cc{min-height:40px;border-radius:5px;padding:3px 4px;background:#0d1117;border:1px solid #21262d;cursor:default;transition:border-color .1s}
-.cc.empty{background:transparent;border-color:transparent}
-.cc .dn{font-size:9px;color:#484f58}
-.cc .gn{font-size:9px;font-weight:600;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal-month-title{font-size:15px;font-weight:500;color:#e6edf3}
+.cal-legend{display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.lsp{font-size:11px;color:#6e7681;display:flex;align-items:center;gap:5px}
+.ldot{width:9px;height:9px;border-radius:2px}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cdlbl{font-size:10px;color:#484f58;text-align:center;padding:2px 0 7px;font-weight:500}
+.cc{min-height:52px;border-radius:6px;padding:4px 5px;background:#0d1117;border:1px solid #21262d;cursor:pointer;transition:border-color .1s}
+.cc:hover{border-color:#3b82f6}
+.cc.empty{background:transparent;border-color:transparent;cursor:default;pointer-events:none}
+.cc .dn{font-size:10px;color:#484f58;font-weight:500}
+.cc .gn{font-size:10px;font-weight:600;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc .pr{font-size:9px;margin-top:1px;color:#6e7681}
 .cc.airbnb{background:#1a1200;border-color:#e3b341}
 .cc.airbnb .dn{color:#9e6a03}.cc.airbnb .gn{color:#e3b341}
 .cc.booking{background:#031d2e;border-color:#1f6feb}
 .cc.booking .dn{color:#1f6feb}.cc.booking .gn{color:#58a6ff}
-.cc.blocked{background:#161b22;border-color:#30363d}
-.cc.blocked .dn{color:#484f58}
-.cc.today{outline:1.5px solid #58a6ff;outline-offset:-1px}
+.cc.today{outline:2px solid #3b82f6;outline-offset:-2px}
 
 /* Broneeringute nimekiri */
-.bklist{display:flex;flex-direction:column;gap:8px}
-.bkrow{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;background:#0d1117;border:1px solid #21262d}
-.bkav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.bklist{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto}
+.bkrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:#0d1117;border:1px solid #21262d;cursor:pointer;transition:border-color .1s}
+.bkrow:hover{border-color:#3b82f6}
+.bkav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
 .av-a{background:#2d1b00;color:#e3b341}
 .av-b{background:#031d2e;color:#58a6ff}
-.bkname{font-size:12px;font-weight:500;color:#e6edf3;flex:1}
-.bkdates{font-size:10px;color:#6e7681;margin-top:1px}
-.bkprice{font-size:12px;font-weight:500;color:#e6edf3;text-align:right}
+.bkname{font-size:13px;font-weight:500;color:#e6edf3}
+.bkdates{font-size:11px;color:#6e7681;margin-top:1px}
+.bkprice{font-size:13px;font-weight:600;color:#3fb950;text-align:right}
 .bknights{font-size:10px;color:#484f58;text-align:right}
-.badge-a{font-size:9px;padding:1px 6px;border-radius:8px;background:#2d1b00;color:#e3b341;border:1px solid #6e4700}
-.badge-b{font-size:9px;padding:1px 6px;border-radius:8px;background:#031d2e;color:#58a6ff;border:1px solid #1f6feb}
+.badge-a{font-size:9px;padding:2px 6px;border-radius:8px;background:#2d1b00;color:#e3b341;border:1px solid #6e4700}
+.badge-b{font-size:9px;padding:2px 6px;border-radius:8px;background:#031d2e;color:#58a6ff;border:1px solid #1f6feb}
 
-/* Tulu ribad */
-.rev-row{display:flex;align-items:center;gap:8px;margin-bottom:9px}
-.rev-lbl{font-size:12px;color:#6e7681;width:90px;flex-shrink:0}
-.rev-track{flex:1;height:7px;background:#21262d;border-radius:4px;overflow:hidden}
-.rev-fill-a{height:100%;background:#e3b341;border-radius:4px;transition:width .4s}
-.rev-fill-b{height:100%;background:#3b82f6;border-radius:4px;transition:width .4s}
-.rev-val{font-size:12px;font-weight:500;color:#e6edf3;width:55px;text-align:right}
+/* Revenue bars */
+.rev-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.rev-lbl{font-size:12px;color:#6e7681;width:100px;flex-shrink:0}
+.rev-track{flex:1;height:8px;background:#21262d;border-radius:4px;overflow:hidden}
+.rev-fill-a{height:100%;background:#e3b341;border-radius:4px;transition:width .5s}
+.rev-fill-b{height:100%;background:#3b82f6;border-radius:4px;transition:width .5s}
+.rev-val{font-size:12px;font-weight:500;color:#e6edf3;width:65px;text-align:right}
 
 /* Hoiatused */
-.alerts{display:flex;flex-direction:column;gap:7px}
-.al{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:7px;font-size:11px}
+.alerts{display:flex;flex-direction:column;gap:8px}
+.al{display:flex;gap:9px;align-items:flex-start;padding:9px 11px;border-radius:8px;font-size:12px}
 .al.warn{background:#1a1000;color:#e3b341;border:1px solid #3d2800}
 .al.info{background:#031d2e;color:#58a6ff;border:1px solid #1f6feb}
 .al.ok{background:#051f0a;color:#3fb950;border:1px solid #1a4020}
-.aldot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;margin-top:3px}
+.aldot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;margin-top:3px}
+
+/* Kaart */
+.map-wrap{position:relative;background:#0d1117;border-radius:8px;overflow:hidden;margin-top:4px}
+.map-tooltip{display:none;position:absolute;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:7px 11px;font-size:12px;color:#e6edf3;pointer-events:none;white-space:nowrap;z-index:10}
+
+/* Rahvuste ribad */
+.nat-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.nat-flag{font-size:16px;width:24px;text-align:center;flex-shrink:0}
+.nat-country{font-size:12px;color:#e6edf3;width:100px;flex-shrink:0}
+.nat-track{flex:1;height:8px;background:#21262d;border-radius:4px;overflow:hidden}
+.nat-fill{height:100%;background:#58a6ff;border-radius:4px;transition:width .5s}
+.nat-count{font-size:11px;color:#6e7681;width:65px;text-align:right}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);align-items:center;justify-content:center;z-index:100}
+.modal-overlay.open{display:flex}
+.modal{background:#161b22;border:1px solid #2a2d3a;border-radius:12px;padding:20px 22px;width:300px;max-width:95vw}
+.modal h4{font-size:14px;font-weight:600;color:#e6edf3;margin-bottom:16px}
+.mclose{float:right;background:none;border:none;color:#6e7681;cursor:pointer;font-size:18px;margin-top:-3px}
+.mlabel{font-size:11px;color:#6e7681;display:block;margin:10px 0 4px}
+.minput{width:100%;padding:7px 10px;background:#0d1117;border:1px solid #30363d;border-radius:7px;color:#e6edf3;font-size:13px}
+.minput:focus{outline:none;border-color:#3b82f6}
+.mactions{display:flex;gap:8px;margin-top:16px}
+.mbtn-p{flex:1;padding:8px;font-size:13px;border-radius:7px;background:#3b82f6;color:#fff;border:none;cursor:pointer;font-weight:500}
+.mbtn-p:hover{background:#2563eb}
+.mbtn-s{flex:1;padding:8px;font-size:13px;border-radius:7px;background:transparent;color:#8b949e;border:1px solid #30363d;cursor:pointer}
+.mbtn-del{padding:8px 14px;font-size:13px;border-radius:7px;background:transparent;color:#f78166;border:1px solid #3d1a1a;cursor:pointer}
 
 /* Footer */
-.footer{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.footer{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:11px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
 .ft{font-size:11px;color:#484f58}
-.ft span{color:#6e7681}
 
-/* Loading */
-.loading{text-align:center;padding:60px;color:#484f58;font-size:14px}
-
-@media(max-width:640px){
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
   .metrics{grid-template-columns:repeat(2,1fr)}
-  .grid2{grid-template-columns:1fr}
+  .grid2,.grid3{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="layout">
 
-  <div class="header">
-    <div class="logo">Stay<span>Pulse</span> <span style="font-size:12px;color:#484f58;font-weight:400">· Raua Modern Sauna Suite</span></div>
-    <div class="sync-info">
-      <div class="sdot" id="sync-dot"></div>
-      <span id="sync-text">Laadib...</span>
-    </div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">Stay<span>Pulse</span></div>
+  <div class="prop">Raua Modern Sauna Suite</div>
+  <div class="nav-section">Peamenüü</div>
+  <button class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-dot"></span>Dashboard</button>
+  <button class="nav-item" onclick="showPage('kalender',this)"><span class="nav-dot"></span>Kalender</button>
+  <button class="nav-item" onclick="showPage('broneeringud',this)"><span class="nav-dot"></span>Broneeringud</button>
+  <button class="nav-item" onclick="showPage('tulu',this)"><span class="nav-dot"></span>Tulu</button>
+  <button class="nav-item" onclick="showPage('kaart',this)"><span class="nav-dot"></span>Külastajate kaart</button>
+  <div class="nav-section">Süsteem</div>
+  <button class="nav-item" onclick="showPage('seaded',this)"><span class="nav-dot"></span>Seaded</button>
+  <div class="sync-box">
+    <span class="sdot" id="sdot"></span>
+    <div class="sync-txt" id="sync-txt">Laadib...</div>
   </div>
-
-  <div id="app"><div class="loading">Laadib broneeringuid...</div></div>
-
 </div>
 
-<script>
-const MONTHS_ET = ['Jaanuar','Veebruar','Märts','Aprill','Mai','Juuni','Juuli','August','September','Oktoober','November','Detsember'];
-const MONTHS_GEN = ['jaanuar','veebruar','märts','aprill','mai','juuni','juuli','august','september','oktoober','november','detsember'];
-let allBookings = [];
-let calYear, calMonth;
+<!-- MAIN -->
+<div class="main">
 
-function initDate() {
-  const now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth();
-}
-
-function getBookingsForMonth(year, month) {
-  const start = new Date(year, month, 1);
-  const end   = new Date(year, month + 1, 0);
-  return allBookings.filter(b => {
-    const bs = new Date(b.start);
-    const be = new Date(b.end);
-    return bs <= end && be >= start;
-  });
-}
-
-function getUpcoming() {
-  const today = new Date().toISOString().split('T')[0];
-  return allBookings
-    .filter(b => b.end >= today && b.platform !== 'blocked')
-    .sort((a,b) => a.start.localeCompare(b.start))
-    .slice(0, 5);
-}
-
-function calcOccupancy(year, month) {
-  const dim = new Date(year, month + 1, 0).getDate();
-  const bks = getBookingsForMonth(year, month);
-  const occupied = new Set();
-  bks.forEach(b => {
-    if (b.platform === 'blocked') return;
-    let d = new Date(b.start);
-    const e = new Date(b.end);
-    while (d < e) {
-      if (d.getFullYear() === year && d.getMonth() === month)
-        occupied.add(d.getDate());
-      d.setDate(d.getDate() + 1);
-    }
-  });
-  return { days: occupied.size, total: dim, pct: Math.round(occupied.size / dim * 100) };
-}
-
-function getDayBooking(year, month, day) {
-  const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-  return allBookings.find(b => b.start <= ds && b.end > ds) || null;
-}
-
-function formatDate(iso) {
-  const d = new Date(iso);
-  return `${d.getDate()}. ${MONTHS_GEN[d.getMonth()]}`;
-}
-
-function nightsBetween(start, end) {
-  return Math.round((new Date(end) - new Date(start)) / 86400000);
-}
-
-function initials(name) {
-  return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-}
-
-function renderCalendar() {
-  const firstDay = new Date(calYear, calMonth, 1).getDay();
-  const offset   = firstDay === 0 ? 6 : firstDay - 1;
-  const dim      = new Date(calYear, calMonth + 1, 0).getDate();
-  const today    = new Date();
-  let html = '';
-
-  ['E','T','K','N','R','L','P'].forEach(d => html += `<div class="cdlbl">${d}</div>`);
-  for (let i = 0; i < offset; i++) html += `<div class="cc empty"></div>`;
-
-  for (let d = 1; d <= dim; d++) {
-    const bk = getDayBooking(calYear, calMonth, d);
-    const isToday = today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d;
-    let cls = 'cc';
-    let guestHtml = '';
-    if (bk) {
-      cls += ' ' + bk.platform;
-      if (bk.platform !== 'blocked') {
-        const short = (bk.guest || '').split(' ')[0];
-        guestHtml = `<div class="gn">${short}</div>`;
-      }
-    }
-    if (isToday) cls += ' today';
-    html += `<div class="${cls}"><div class="dn">${d}</div>${guestHtml}</div>`;
-  }
-  document.getElementById('cal-grid').innerHTML = html;
-  document.getElementById('cal-title').textContent = MONTHS_ET[calMonth] + ' ' + calYear;
-}
-
-function render(data) {
-  allBookings = data.bookings || [];
-  initDate();
-
-  // Sync info
-  const updated = data.updated ? new Date(data.updated) : null;
-  document.getElementById('sync-dot').style.background = '#3fb950';
-  document.getElementById('sync-text').textContent = updated
-    ? `Sünkroonitud ${updated.getDate()}. ${MONTHS_GEN[updated.getMonth()]} kell ${updated.toLocaleTimeString('et-EE',{hour:'2-digit',minute:'2-digit'})}`
-    : 'Sünkroonitud';
-
-  // Stats
-  const now   = new Date();
-  const occ   = calcOccupancy(now.getFullYear(), now.getMonth());
-  const bksThisMonth = getBookingsForMonth(now.getFullYear(), now.getMonth())
-    .filter(b => b.platform !== 'blocked');
-  const airCount = bksThisMonth.filter(b => b.platform === 'airbnb').length;
-  const bkCount  = bksThisMonth.filter(b => b.platform === 'booking').length;
-
-  // Upcoming
-  const upcoming = getUpcoming();
-  const nextBk   = upcoming[0];
-
-  // Alerts
-  const alerts = [];
-  if (occ.pct < 50) alerts.push({type:'warn', msg:`Täituvus ${occ.pct}% — kaaluge hindade alandamist`});
-  if (nextBk) {
-    const daysUntil = Math.round((new Date(nextBk.start) - now) / 86400000);
-    if (daysUntil <= 2) alerts.push({type:'warn', msg:`Sisseregistreerimine ${daysUntil === 0 ? 'täna' : daysUntil === 1 ? 'homme' : `${daysUntil} päeva pärast`} — ${nextBk.guest.split(' ')[0]}`});
-  }
-  alerts.push({type:'ok', msg:`Mõlemad iCal feed'id aktiivsed`});
-
-  // Revenue bars (broneeringute arv suhtena, kuna hinda pole iCal-is)
-  const total = airCount + bkCount || 1;
-  const airPct = Math.round(airCount / total * 100);
-  const bkPct  = Math.round(bkCount  / total * 100);
-
-  document.getElementById('app').innerHTML = `
-    <div class="metrics">
-      <div class="mc">
-        <div class="mlbl">Selle kuu broneeringud</div>
-        <div class="mval">${bksThisMonth.length}</div>
-        <div class="msub">Airbnb ${airCount} · Booking ${bkCount}</div>
-      </div>
-      <div class="mc">
-        <div class="mlbl">Täituvus</div>
-        <div class="mval">${occ.pct}%</div>
-        <div class="msub ${occ.pct >= 70 ? 'green' : occ.pct >= 40 ? 'yellow' : 'red'}">${occ.days}/${occ.total} päeva</div>
-      </div>
-      <div class="mc">
-        <div class="mlbl">Kõik broneeringud</div>
-        <div class="mval">${allBookings.filter(b=>b.platform!=='blocked').length}</div>
-        <div class="msub">iCal sünkroonitud</div>
-      </div>
-      <div class="mc">
-        <div class="mlbl">Järgmine külaline</div>
-        <div class="mval" style="font-size:16px;padding-top:4px">${nextBk ? nextBk.guest.split(' ')[0] : '—'}</div>
-        <div class="msub yellow">${nextBk ? formatDate(nextBk.start) + ' · ' + (nextBk.platform === 'airbnb' ? 'Airbnb' : 'Booking') : 'Broneeringuid pole'}</div>
-      </div>
-    </div>
-
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-title">Dashboard</div>
+    <div class="metrics" id="metrics"></div>
     <div class="grid2">
-      <div class="card">
-        <div class="cal-header">
+      <div class="card" id="cal-card">
+        <div class="cal-nav">
           <button class="cal-btn" id="prev-btn">&#8592;</button>
-          <span class="cal-month" id="cal-title"></span>
+          <span class="cal-month-title" id="cal-title"></span>
           <button class="cal-btn" id="next-btn">&#8594;</button>
         </div>
         <div class="cal-legend">
           <span class="lsp"><span class="ldot" style="background:#e3b341"></span>Airbnb</span>
           <span class="lsp"><span class="ldot" style="background:#3b82f6"></span>Booking.com</span>
-          <span class="lsp"><span class="ldot" style="background:#21262d;border:1px solid #30363d"></span>Blokeeritud</span>
         </div>
         <div class="cgrid" id="cal-grid"></div>
       </div>
-
-      <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;flex-direction:column;gap:14px">
         <div class="card">
           <div class="ctitle">Tulevased broneeringud</div>
-          <div class="bklist">
-            ${upcoming.length === 0 ? '<div style="font-size:12px;color:#484f58">Broneeringuid pole</div>' :
-              upcoming.map(b => {
-                const nights = nightsBetween(b.start, b.end);
-                const av = initials(b.guest);
-                const isA = b.platform === 'airbnb';
-                return `<div class="bkrow">
-                  <div class="bkav ${isA ? 'av-a' : 'av-b'}">${av}</div>
-                  <div style="flex:1">
-                    <div class="bkname">${b.guest}</div>
-                    <div class="bkdates">${formatDate(b.start)}–${formatDate(b.end)} · <span class="${isA ? 'badge-a' : 'badge-b'}">${isA ? 'Airbnb' : 'Booking'}</span></div>
-                  </div>
-                  <div>
-                    <div class="bknights">${nights} öö${nights !== 1 ? 'd' : ''}</div>
-                  </div>
-                </div>`;
-              }).join('')
-            }
-          </div>
+          <div class="bklist" id="upcoming-list"></div>
         </div>
-
         <div class="card">
-          <div class="ctitle">Platvormide jaotus</div>
-          <div class="rev-row">
-            <div class="rev-lbl">Airbnb</div>
-            <div class="rev-track"><div class="rev-fill-a" style="width:${airPct}%"></div></div>
-            <div class="rev-val">${airCount} bron.</div>
-          </div>
-          <div class="rev-row">
-            <div class="rev-lbl">Booking.com</div>
-            <div class="rev-track"><div class="rev-fill-b" style="width:${bkPct}%"></div></div>
-            <div class="rev-val">${bkCount} bron.</div>
-          </div>
-          <div style="font-size:10px;color:#484f58;margin-top:4px">Hinda iCal ei sisalda</div>
-        </div>
-
-        <div class="card">
-          <div class="ctitle">Märguanded</div>
-          <div class="alerts">
-            ${alerts.map(a => `<div class="al ${a.type}"><div class="aldot"></div><div>${a.msg}</div></div>`).join('')}
-          </div>
+          <div class="ctitle">Hoiatused</div>
+          <div class="alerts" id="alerts-list"></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="footer">
-      <div class="ft">GitHub Pages · <span id="footer-url">kasutajanimi.github.io/dashboard</span></div>
-      <div class="ft">Automaatne sync iga tund · GitHub Actions</div>
+  <!-- KALENDER (täislaius) -->
+  <div class="page" id="page-kalender">
+    <div class="page-title">Kalender</div>
+    <div class="card">
+      <div class="cal-nav">
+        <button class="cal-btn" id="prev-btn2">&#8592;</button>
+        <span class="cal-month-title" id="cal-title2"></span>
+        <button class="cal-btn" id="next-btn2">&#8594;</button>
+      </div>
+      <div class="cal-legend">
+        <span class="lsp"><span class="ldot" style="background:#e3b341"></span>Airbnb</span>
+        <span class="lsp"><span class="ldot" style="background:#3b82f6"></span>Booking.com</span>
+      </div>
+      <div class="cgrid" id="cal-grid2" style="gap:4px"></div>
     </div>
-  `;
+  </div>
 
-  // Kalender
-  renderCalendar();
+  <!-- BRONEERINGUD -->
+  <div class="page" id="page-broneeringud">
+    <div class="page-title">Kõik broneeringud</div>
+    <div class="card">
+      <div class="ctitle">Broneeringud (uuemad ees)</div>
+      <div class="bklist" id="all-list" style="max-height:600px"></div>
+    </div>
+  </div>
 
-  document.getElementById('prev-btn').onclick = () => {
-    calMonth--;
-    if (calMonth < 0) { calMonth = 11; calYear--; }
-    renderCalendar();
-  };
-  document.getElementById('next-btn').onclick = () => {
-    calMonth++;
-    if (calMonth > 11) { calMonth = 0; calYear++; }
-    renderCalendar();
-  };
+  <!-- TULU -->
+  <div class="page" id="page-tulu">
+    <div class="page-title">Tulu</div>
+    <div class="metrics" id="revenue-metrics"></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="ctitle">Platvormide jaotus</div>
+        <div id="rev-bars"></div>
+        <div style="font-size:10px;color:#484f58;margin-top:8px">Hinnad sisestatavad broneeringul klikkides</div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Kuude tulu</div>
+        <div id="monthly-rev"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KAART -->
+  <div class="page" id="page-kaart">
+    <div class="page-title">Külastajate päritolu</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="ctitle">Riikide statistika</div>
+        <div id="nat-bars"></div>
+        <div style="font-size:10px;color:#484f58;margin-top:8px">Riik sisestatav broneeringul klikkides</div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Päritolu kaardil</div>
+        <div class="map-wrap" id="mapwrap">
+          <svg id="mapsvg" style="width:100%;display:block" viewBox="0 0 440 320"></svg>
+          <div class="map-tooltip" id="map-tt"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEADED -->
+  <div class="page" id="page-seaded">
+    <div class="page-title">Seaded</div>
+    <div class="card" style="max-width:500px">
+      <div class="ctitle">Info</div>
+      <p style="font-size:13px;color:#6e7681;line-height:1.6">Dashboard sünkroonib broneeringud automaatselt iga tund GitHub Actions kaudu. Hindade ja rahvuste lisamiseks kliki kalendris broneeringul.</p>
+      <div style="margin-top:16px;padding:12px;background:#0d1117;border-radius:8px;border:1px solid #21262d">
+        <div style="font-size:11px;color:#484f58;margin-bottom:6px">Andmete lähtestamine</div>
+        <button onclick="if(confirm('Kustutad kõik käsitsi sisestatud hinnad ja riigid?')){localStorage.clear();location.reload()}" style="padding:7px 14px;background:transparent;border:1px solid #3d1a1a;color:#f78166;border-radius:6px;font-size:12px;cursor:pointer">Kustuta kõik kohalikud andmed</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="ft">rrxsr.github.io/dashboard</div>
+    <div class="ft">Automaatne sync iga tund · GitHub Actions</div>
+  </div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="mclose" id="modal-close">&#215;</button>
+    <h4 id="modal-title">Broneeringu info</h4>
+    <div id="modal-bk-info" style="font-size:12px;color:#6e7681;margin-bottom:4px"></div>
+    <label class="mlabel">Hind (€) — kokku</label>
+    <input class="minput" type="number" id="m-price" placeholder="nt. 270">
+    <label class="mlabel">Külastaja riik</label>
+    <select class="minput" id="m-country">
+      <option value="">— vali riik —</option>
+      <option value="EE|🇪🇪|Eesti|[24.7,59.4]">🇪🇪 Eesti</option>
+      <option value="FI|🇫🇮|Soome|[25.7,61.9]">🇫🇮 Soome</option>
+      <option value="SE|🇸🇪|Rootsi|[18.6,59.3]">🇸🇪 Rootsi</option>
+      <option value="NO|🇳🇴|Norra|[10.7,59.9]">🇳🇴 Norra</option>
+      <option value="DK|🇩🇰|Taani|[10.2,56.0]">🇩🇰 Taani</option>
+      <option value="DE|🇩🇪|Saksamaa|[10.4,51.2]">🇩🇪 Saksamaa</option>
+      <option value="NL|🇳🇱|Holland|[5.3,52.1]">🇳🇱 Holland</option>
+      <option value="GB|🇬🇧|Suurbritannia|[-1.5,52.4]">🇬🇧 Suurbritannia</option>
+      <option value="FR|🇫🇷|Prantsusmaa|[2.3,46.2]">🇫🇷 Prantsusmaa</option>
+      <option value="LV|🇱🇻|Läti|[24.6,56.9]">🇱🇻 Läti</option>
+      <option value="LT|🇱🇹|Leedu|[23.9,55.2]">🇱🇹 Leedu</option>
+      <option value="PL|🇵🇱|Poola|[19.1,52.2]">🇵🇱 Poola</option>
+      <option value="IT|🇮🇹|Itaalia|[12.6,42.5]">🇮🇹 Itaalia</option>
+      <option value="ES|🇪🇸|Hispaania|[-3.7,40.4]">🇪🇸 Hispaania</option>
+      <option value="US|🇺🇸|USA|[-98.5,39.5]">🇺🇸 USA</option>
+      <option value="JP|🇯🇵|Jaapan|[138.3,36.2]">🇯🇵 Jaapan</option>
+      <option value="OTHER|🌍|Muu|[0,20]">🌍 Muu</option>
+    </select>
+    <label class="mlabel">Märkused</label>
+    <input class="minput" id="m-notes" placeholder="valikuline">
+    <div class="mactions">
+      <button class="mbtn-p" id="modal-save">Salvesta</button>
+      <button class="mbtn-s" id="modal-cancel">Tühista</button>
+      <button class="mbtn-del" id="modal-delete">Kustuta</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+// ── Andmed ──────────────────────────────────────────────
+const MONTHS = ['Jaanuar','Veebruar','Märts','Aprill','Mai','Juuni','Juuli','August','September','Oktoober','November','Detsember'];
+const MONTHS_GEN = ['jaanuaris','veebruaris','märtsis','aprillis','mais','juunis','juulis','augustis','septembris','oktoobris','novembris','detsembris'];
+
+let allBookings = [];
+let extra = JSON.parse(localStorage.getItem('staypulse_extra') || '{}');
+let calYear, calMonth;
+
+function saveExtra(){ localStorage.setItem('staypulse_extra', JSON.stringify(extra)); }
+function getExtra(key){ return extra[key] || {}; }
+
+function initDate(){ const n=new Date(); calYear=n.getFullYear(); calMonth=n.getMonth(); }
+
+function bkKey(b){ return b.start+'_'+b.end+'_'+b.platform; }
+
+function getUpcoming(){
+  const today=new Date().toISOString().split('T')[0];
+  return allBookings.filter(b=>b.end>today&&b.guest!=='Broneeritud'&&b.guest!=='Broneering').sort((a,b)=>a.start.localeCompare(b.start)).slice(0,6);
 }
 
-// Lae data.json
-fetch('data.json')
-  .then(r => {
-    if (!r.ok) throw new Error('data.json ei leitud');
-    return r.json();
-  })
-  .then(data => render(data))
-  .catch(err => {
-    document.getElementById('sync-dot').style.background = '#f78166';
-    document.getElementById('sync-text').textContent = 'Viga laadimisel';
-    document.getElementById('app').innerHTML = `
-      <div class="card" style="text-align:center;padding:40px;color:#6e7681">
-        <div style="font-size:24px;margin-bottom:12px">⚠️</div>
-        <div style="font-size:14px;color:#e6edf3;margin-bottom:8px">data.json ei leitud</div>
-        <div style="font-size:12px">Käivita kõigepealt <code style="color:#58a6ff">python generate.py</code></div>
+function calcOccupancy(year,month){
+  const dim=new Date(year,month+1,0).getDate();
+  const occupied=new Set();
+  allBookings.forEach(b=>{
+    let d=new Date(b.start), e=new Date(b.end);
+    while(d<e){
+      if(d.getFullYear()===year&&d.getMonth()===month) occupied.add(d.getDate());
+      d.setDate(d.getDate()+1);
+    }
+  });
+  return {days:occupied.size,total:dim,pct:Math.round(occupied.size/dim*100)};
+}
+
+function totalRevenue(){
+  let t=0;
+  allBookings.forEach(b=>{ const ex=getExtra(bkKey(b)); if(ex.price) t+=Number(ex.price); });
+  return t;
+}
+
+function monthRevenue(year,month){
+  let t=0;
+  allBookings.forEach(b=>{
+    const bs=new Date(b.start);
+    if(bs.getFullYear()===year&&bs.getMonth()===month){
+      const ex=getExtra(bkKey(b));
+      if(ex.price) t+=Number(ex.price);
+    }
+  });
+  return t;
+}
+
+function formatDate(iso){
+  const d=new Date(iso);
+  return d.getDate()+'. '+MONTHS_GEN[d.getMonth()];
+}
+
+function nightsBetween(s,e){
+  return Math.round((new Date(e)-new Date(s))/86400000);
+}
+
+function initials(name){
+  return (name||'B').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase()||'B';
+}
+
+function getDayBk(year,month,day){
+  const ds=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  return allBookings.find(b=>b.start<=ds&&b.end>ds)||null;
+}
+
+// ── Navigatsioon ─────────────────────────────────────────
+function showPage(id, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  if(id==='kaart') renderMap();
+  if(id==='tulu') renderTulu();
+  if(id==='broneeringud') renderAllList();
+  if(id==='kalender') renderCalendar2();
+}
+
+// ── Render: metrics ───────────────────────────────────────
+function renderMetrics(){
+  const now=new Date();
+  const occ=calcOccupancy(now.getFullYear(),now.getMonth());
+  const thisMonthRev=monthRevenue(now.getFullYear(),now.getMonth());
+  const upcoming=getUpcoming();
+  const nextBk=upcoming[0];
+  const totalBk=allBookings.filter(b=>b.guest!=='Broneeritud').length;
+
+  document.getElementById('metrics').innerHTML=`
+    <div class="mc"><div class="mlbl">Selle kuu tulu</div><div class="mval green">€${thisMonthRev||'—'}</div><div class="msub">${MONTHS[now.getMonth()]}</div></div>
+    <div class="mc"><div class="mlbl">Täituvus</div><div class="mval ${occ.pct>=70?'green':occ.pct>=40?'yellow':'red'}">${occ.pct}%</div><div class="msub">${occ.days}/${occ.total} päeva</div></div>
+    <div class="mc"><div class="mlbl">Kõik broneeringud</div><div class="mval blue">${totalBk}</div><div class="msub">iCal sünkroonitud</div></div>
+    <div class="mc"><div class="mlbl">Kogu tulu</div><div class="mval green">€${totalRevenue()||'—'}</div><div class="msub">sisestatud broneeringud</div></div>
+    <div class="mc"><div class="mlbl">Järgmine külaline</div><div class="mval" style="font-size:16px;padding-top:4px">${nextBk?nextBk.guest.split(' ')[0]:'—'}</div><div class="msub yellow">${nextBk?formatDate(nextBk.start):'Broneeringuid pole'}</div></div>
+  `;
+}
+
+// ── Render: kalender ─────────────────────────────────────
+function renderCalendar(gridId, titleId){
+  const g=document.getElementById(gridId);
+  g.innerHTML='';
+  document.getElementById(titleId).textContent=MONTHS[calMonth]+' '+calYear;
+  ['E','T','K','N','R','L','P'].forEach(d=>{const el=document.createElement('div');el.className='cdlbl';el.textContent=d;g.appendChild(el);});
+  const fd=new Date(calYear,calMonth,1).getDay();
+  const off=fd===0?6:fd-1;
+  const dim=new Date(calYear,calMonth+1,0).getDate();
+  const td=new Date();
+  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='cc empty';g.appendChild(e);}
+  for(let d=1;d<=dim;d++){
+    const bk=getDayBk(calYear,calMonth,d);
+    const isT=td.getFullYear()===calYear&&td.getMonth()===calMonth&&td.getDate()===d;
+    const el=document.createElement('div');
+    el.className='cc'+(bk?' '+bk.platform:'')+(isT?' today':'');
+    const ex=bk?getExtra(bkKey(bk)):{};
+    el.innerHTML=`<div class="dn">${d}</div>${bk?`<div class="gn">${bk.guest.split(' ')[0]}</div>${ex.price?`<div class="pr">€${ex.price}</div>`:''}` :''}`;
+    if(bk) el.onclick=()=>openModal(bk);
+    g.appendChild(el);
+  }
+}
+
+// ── Render: kalender leht ────────────────────────────────
+function renderCalendar2(){ renderCalendar('cal-grid2','cal-title2'); }
+
+// ── Render: upcoming ─────────────────────────────────────
+function renderUpcoming(){
+  const list=getUpcoming();
+  document.getElementById('upcoming-list').innerHTML=list.length===0?
+    '<div style="font-size:12px;color:#484f58">Tulevasi broneeringuid pole</div>':
+    list.map(b=>{
+      const ex=getExtra(bkKey(b));
+      const n=nightsBetween(b.start,b.end);
+      const isA=b.platform==='airbnb';
+      const flag=ex.countryFlag||'';
+      return `<div class="bkrow" onclick="openModal(${JSON.stringify(b).replace(/"/g,'&quot;')})">
+        <div class="bkav ${isA?'av-a':'av-b'}">${flag||initials(b.guest)}</div>
+        <div style="flex:1">
+          <div class="bkname">${b.guest} ${flag}</div>
+          <div class="bkdates">${formatDate(b.start)}–${formatDate(b.end)} · <span class="${isA?'badge-a':'badge-b'}">${isA?'Airbnb':'Booking'}</span></div>
+        </div>
+        <div>
+          <div class="bkprice">${ex.price?'€'+ex.price:''}</div>
+          <div class="bknights">${n} öö${n!==1?'d':''}</div>
+        </div>
       </div>`;
+    }).join('');
+}
+
+// ── Render: kõik broneeringud ────────────────────────────
+function renderAllList(){
+  const sorted=[...allBookings].sort((a,b)=>b.start.localeCompare(a.start));
+  document.getElementById('all-list').innerHTML=sorted.map(b=>{
+    const ex=getExtra(bkKey(b));
+    const n=nightsBetween(b.start,b.end);
+    const isA=b.platform==='airbnb';
+    const flag=ex.countryFlag||'';
+    return `<div class="bkrow" onclick="openModal(${JSON.stringify(b).replace(/"/g,'&quot;')})">
+      <div class="bkav ${isA?'av-a':'av-b'}">${flag||initials(b.guest)}</div>
+      <div style="flex:1">
+        <div class="bkname">${b.guest} ${flag}</div>
+        <div class="bkdates">${formatDate(b.start)}–${formatDate(b.end)} · <span class="${isA?'badge-a':'badge-b'}">${isA?'Airbnb':'Booking'}</span>${ex.countryName?' · '+ex.countryName:''}</div>
+      </div>
+      <div>
+        <div class="bkprice">${ex.price?'€'+ex.price:''}</div>
+        <div class="bknights">${n} öö${n!==1?'d':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Render: tulu ─────────────────────────────────────────
+function renderTulu(){
+  const now=new Date();
+  let airRev=0, bkRev=0;
+  allBookings.forEach(b=>{
+    const ex=getExtra(bkKey(b));
+    if(!ex.price) return;
+    if(b.platform==='airbnb') airRev+=Number(ex.price);
+    else bkRev+=Number(ex.price);
+  });
+  const total=airRev+bkRev||1;
+  document.getElementById('revenue-metrics').innerHTML=`
+    <div class="mc"><div class="mlbl">Kogu tulu</div><div class="mval green">€${airRev+bkRev}</div><div class="msub">sisestatud broneeringud</div></div>
+    <div class="mc"><div class="mlbl">Airbnb tulu</div><div class="mval yellow">€${airRev}</div><div class="msub">${Math.round(airRev/total*100)}% kogutulust</div></div>
+    <div class="mc"><div class="mlbl">Booking tulu</div><div class="mval blue">€${bkRev}</div><div class="msub">${Math.round(bkRev/total*100)}% kogutulust</div></div>
+    <div class="mc"><div class="mlbl">Selle kuu</div><div class="mval green">€${monthRevenue(now.getFullYear(),now.getMonth())||0}</div><div class="msub">${MONTHS[now.getMonth()]}</div></div>
+  `;
+  document.getElementById('rev-bars').innerHTML=`
+    <div class="rev-row"><div class="rev-lbl">Airbnb</div><div class="rev-track"><div class="rev-fill-a" style="width:${Math.round(airRev/total*100)}%"></div></div><div class="rev-val">€${airRev}</div></div>
+    <div class="rev-row"><div class="rev-lbl">Booking.com</div><div class="rev-track"><div class="rev-fill-b" style="width:${Math.round(bkRev/total*100)}%"></div></div><div class="rev-val">€${bkRev}</div></div>
+  `;
+  // Kuude tulu
+  const months={};
+  allBookings.forEach(b=>{
+    const ex=getExtra(bkKey(b));
+    if(!ex.price) return;
+    const d=new Date(b.start);
+    const k=d.getFullYear()+'-'+d.getMonth();
+    if(!months[k]) months[k]={label:MONTHS[d.getMonth()]+' '+d.getFullYear(),rev:0};
+    months[k].rev+=Number(ex.price);
+  });
+  const maxRev=Math.max(...Object.values(months).map(m=>m.rev),1);
+  document.getElementById('monthly-rev').innerHTML=Object.entries(months).sort().map(([k,m])=>`
+    <div class="rev-row">
+      <div class="rev-lbl" style="font-size:11px">${m.label}</div>
+      <div class="rev-track"><div class="rev-fill-a" style="width:${Math.round(m.rev/maxRev*100)}%"></div></div>
+      <div class="rev-val">€${m.rev}</div>
+    </div>`).join('')||'<div style="font-size:12px;color:#484f58">Lisa broneeringutele hinnad</div>';
+}
+
+// ── Render: rahvused + kaart ─────────────────────────────
+function renderMap(){
+  const counts={};
+  allBookings.forEach(b=>{
+    const ex=getExtra(bkKey(b));
+    if(!ex.countryCode) return;
+    if(!counts[ex.countryCode]) counts[ex.countryCode]={flag:ex.countryFlag,name:ex.countryName,coords:ex.countryCoords,n:0};
+    counts[ex.countryCode].n++;
+  });
+  const sorted=Object.entries(counts).sort((a,b)=>b[1].n-a[1].n);
+  const maxN=sorted.length?sorted[0][1].n:1;
+
+  document.getElementById('nat-bars').innerHTML=sorted.length===0?
+    '<div style="font-size:12px;color:#484f58">Lisa broneeringutele riigid</div>':
+    sorted.map(([code,d])=>`
+      <div class="nat-bar-row">
+        <span class="nat-flag">${d.flag}</span>
+        <span class="nat-country">${d.name}</span>
+        <div class="nat-track"><div class="nat-fill" style="width:${Math.round(d.n/maxN*100)}%"></div></div>
+        <span class="nat-count">${d.n} külalist</span>
+      </div>`).join('');
+
+  // Kaart
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json()).then(world=>{
+    const w=440,h=320;
+    const svg=d3.select('#mapsvg').attr('viewBox',`0 0 ${w} ${h}`);
+    svg.selectAll('*').remove();
+    const proj=d3.geoMercator().center([14,56]).scale(500).translate([w/2,h/2]);
+    const path=d3.geoPath(proj);
+    svg.append('rect').attr('width',w).attr('height',h).attr('fill','#0d1117');
+    svg.selectAll('path').data(topojson.feature(world,world.objects.countries).features)
+      .join('path').attr('d',path).attr('fill','#161b22').attr('stroke','#21262d').attr('stroke-width','.4');
+
+    const ep=proj([24.7,59.4]);
+    const tt=document.getElementById('map-tt');
+    const wrap=document.getElementById('mapwrap');
+
+    sorted.forEach(([code,d])=>{
+      if(!d.coords) return;
+      const gp=proj(d.coords);
+      if(!gp) return;
+      svg.append('line').attr('x1',ep[0]).attr('y1',ep[1]).attr('x2',gp[0]).attr('y2',gp[1])
+        .attr('stroke','#1f6feb').attr('stroke-width','0.7').attr('stroke-opacity','.35').attr('stroke-dasharray','3,3');
+      const r=6+d.n*4;
+      svg.append('circle').attr('cx',gp[0]).attr('cy',gp[1]).attr('r',r)
+        .attr('fill','#58a6ff').attr('fill-opacity','.65').attr('stroke','#1f6feb').attr('stroke-width','1')
+        .style('cursor','pointer')
+        .on('mousemove',e=>{
+          const rect=wrap.getBoundingClientRect();
+          tt.style.display='block';tt.style.left=(e.clientX-rect.left+10)+'px';tt.style.top=(e.clientY-rect.top-36)+'px';
+          tt.textContent=`${d.flag} ${d.name} · ${d.n} külaline${d.n>1?'t':''}`;
+        }).on('mouseleave',()=>tt.style.display='none');
+    });
+
+    svg.append('circle').attr('cx',ep[0]).attr('cy',ep[1]).attr('r',7).attr('fill','#f78166').attr('stroke','#da3633').attr('stroke-width','1.5');
+    svg.append('text').attr('x',ep[0]+9).attr('y',ep[1]+4).attr('font-size','10').attr('fill','#f78166').text('Tallinn');
+  }).catch(()=>{});
+}
+
+// ── Render: hoiatused ────────────────────────────────────
+function renderAlerts(){
+  const now=new Date();
+  const occ=calcOccupancy(now.getFullYear(),now.getMonth());
+  const alerts=[];
+  if(occ.pct<50) alerts.push({t:'warn',m:`Täituvus ${occ.pct}% — kaaluge hindade alandamist`});
+  const upcoming=getUpcoming();
+  if(upcoming[0]){
+    const days=Math.round((new Date(upcoming[0].start)-now)/86400000);
+    if(days<=2) alerts.push({t:'warn',m:`Sisseregistreerimine ${days===0?'täna':days===1?'homme':days+' päeva pärast'} — ${upcoming[0].guest.split(' ')[0]}`});
+  }
+  const noPrice=allBookings.filter(b=>{const ex=getExtra(bkKey(b));return !ex.price&&b.end>now.toISOString().split('T')[0];});
+  if(noPrice.length) alerts.push({t:'info',m:`${noPrice.length} broneeringul puudub hind — kliki lisamiseks`});
+  alerts.push({t:'ok',m:'iCal feed\'id aktiivsed · sync iga tund'});
+  document.getElementById('alerts-list').innerHTML=alerts.map(a=>`<div class="al ${a.t}"><div class="aldot"></div><div>${a.m}</div></div>`).join('');
+}
+
+// ── Modal ────────────────────────────────────────────────
+let currentBk=null;
+function openModal(bk){
+  if(typeof bk==='string') bk=JSON.parse(bk);
+  currentBk=bk;
+  const ex=getExtra(bkKey(bk));
+  const n=nightsBetween(bk.start,bk.end);
+  document.getElementById('modal-title').textContent=bk.guest;
+  document.getElementById('modal-bk-info').textContent=`${formatDate(bk.start)} – ${formatDate(bk.end)} · ${n} ööd · ${bk.platform==='airbnb'?'Airbnb':'Booking.com'}`;
+  document.getElementById('m-price').value=ex.price||'';
+  document.getElementById('m-country').value=ex.countryRaw||'';
+  document.getElementById('m-notes').value=ex.notes||'';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); currentBk=null; }
+document.getElementById('modal-close').onclick=closeModal;
+document.getElementById('modal-cancel').onclick=closeModal;
+document.getElementById('modal-overlay').onclick=e=>{if(e.target===document.getElementById('modal-overlay'))closeModal();};
+document.getElementById('modal-save').onclick=()=>{
+  if(!currentBk) return;
+  const key=bkKey(currentBk);
+  const raw=document.getElementById('m-country').value;
+  let countryCode='',countryFlag='',countryName='',countryCoords=null;
+  if(raw){
+    const parts=raw.split('|');
+    countryCode=parts[0];countryFlag=parts[1];countryName=parts[2];
+    try{countryCoords=JSON.parse(parts[3]);}catch(e){}
+  }
+  extra[key]={
+    price:document.getElementById('m-price').value,
+    countryRaw:raw,countryCode,countryFlag,countryName,countryCoords,
+    notes:document.getElementById('m-notes').value
+  };
+  saveExtra();
+  closeModal();
+  renderAll();
+};
+document.getElementById('modal-delete').onclick=()=>{
+  if(!currentBk) return;
+  delete extra[bkKey(currentBk)];
+  saveExtra();
+  closeModal();
+  renderAll();
+};
+
+// ── Kõik korraga ─────────────────────────────────────────
+function renderAll(){
+  renderMetrics();
+  renderCalendar('cal-grid','cal-title');
+  renderUpcoming();
+  renderAlerts();
+}
+
+// ── Kalender nupud ───────────────────────────────────────
+document.getElementById('prev-btn').onclick=()=>{ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar('cal-grid','cal-title'); };
+document.getElementById('next-btn').onclick=()=>{ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar('cal-grid','cal-title'); };
+document.getElementById('prev-btn2').onclick=()=>{ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar2(); };
+document.getElementById('next-btn2').onclick=()=>{ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar2(); };
+
+// ── Lae data.json ────────────────────────────────────────
+initDate();
+fetch('data.json')
+  .then(r=>{ if(!r.ok) throw new Error('ei leitud'); return r.json(); })
+  .then(data=>{
+    allBookings=data.bookings||[];
+    const upd=data.updated?new Date(data.updated):null;
+    document.getElementById('sdot').style.background='#3fb950';
+    document.getElementById('sync-txt').textContent=upd?`Sync ${upd.getDate()}. ${MONTHS_GEN[upd.getMonth()]} ${upd.toLocaleTimeString('et-EE',{hour:'2-digit',minute:'2-digit'})}`:'Sünkroonitud';
+    renderAll();
+  })
+  .catch(()=>{
+    document.getElementById('sdot').style.background='#f78166';
+    document.getElementById('sync-txt').textContent='Viga laadimisel';
   });
 </script>
 </body>
