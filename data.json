@@ -1,18 +1,6 @@
 {
-  "updated": "2026-06-07T20:19:32Z",
+  "updated": "2026-06-07T22:11:54Z",
   "bookings": [
-    {
-      "start": "2026-06-05",
-      "end": "2026-06-07",
-      "guest": "Broneeritud",
-      "platform": "booking"
-    },
-    {
-      "start": "2026-06-07",
-      "end": "2026-06-08",
-      "guest": "Broneeritud",
-      "platform": "booking"
-    },
     {
       "start": "2026-06-09",
       "end": "2026-06-12",
@@ -38,8 +26,20 @@
       "platform": "booking"
     },
     {
+      "start": "2026-06-20",
+      "end": "2026-06-23",
+      "guest": "Broneeritud",
+      "platform": "booking"
+    },
+    {
       "start": "2026-06-23",
       "end": "2026-06-24",
+      "guest": "Broneeritud",
+      "platform": "booking"
+    },
+    {
+      "start": "2026-06-24",
+      "end": "2026-06-25",
       "guest": "Broneeritud",
       "platform": "booking"
     },
@@ -75,7 +75,7 @@
     },
     {
       "start": "2026-09-06",
-      "end": "2027-12-07",
+      "end": "2027-12-08",
       "guest": "Broneeritud",
       "platform": "booking"
     }
