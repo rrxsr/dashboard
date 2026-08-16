@@ -1,17 +1,17 @@
 {
-  "updated": "2026-08-15T23:26:24Z",
+  "updated": "2026-08-16T01:48:10Z",
   "bookings": [
-    {
-      "start": "2026-08-13",
-      "end": "2026-08-14",
-      "guest": "Reserved",
-      "platform": "airbnb"
-    },
     {
       "start": "2026-08-15",
       "end": "2026-08-17",
       "guest": "Reserved",
       "platform": "airbnb"
+    },
+    {
+      "start": "2026-08-19",
+      "end": "2026-08-20",
+      "guest": "Broneeritud",
+      "platform": "booking"
     },
     {
       "start": "2026-08-20",
