@@ -1,12 +1,6 @@
 {
-  "updated": "2026-09-21T23:09:10Z",
+  "updated": "2026-09-22T04:32:04Z",
   "bookings": [
-    {
-      "start": "2026-09-19",
-      "end": "2026-09-20",
-      "guest": "Reserved",
-      "platform": "airbnb"
-    },
     {
       "start": "2026-09-26",
       "end": "2026-09-27",
