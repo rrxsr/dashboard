@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-10T21:29:11Z",
+  "updated": "2026-10-11T00:46:51Z",
   "bookings": [
     {
       "start": "2026-10-14",
@@ -21,7 +21,7 @@
     },
     {
       "start": "2026-12-01",
-      "end": "2028-04-10",
+      "end": "2028-04-11",
       "guest": "Broneeritud",
       "platform": "booking"
     }
