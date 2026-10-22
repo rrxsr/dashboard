@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-22T09:59:01Z",
+  "updated": "2026-10-22T15:06:49Z",
   "bookings": [
     {
       "start": "2026-10-24",
@@ -16,6 +16,12 @@
     {
       "start": "2026-11-21",
       "end": "2026-11-22",
+      "guest": "Reserved",
+      "platform": "airbnb"
+    },
+    {
+      "start": "2026-11-27",
+      "end": "2026-11-29",
       "guest": "Reserved",
       "platform": "airbnb"
     },
